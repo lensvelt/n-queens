@@ -121,17 +121,18 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
+  n=4;
   var solutionCount = undefined; //fixme
-  var n = 4;
-  var board = new Board({n: n});
-  var startRow = 3;
-  var startCol = 3;
-  var done = [];
-  var count = 0;
+  var board;
+  var startRow;
+  var startCol;
+  var done;
+  var count;
   var validStartPoint;
-  var currentRow = 0;
+  var currentRow;
 
   var initBoard = function() {
+    board = new Board({n: n});
   //This will populate the entire board
     for (var row = 0; row < n; row++) {
       for (var col = 0; col < n; col++) {
@@ -206,23 +207,48 @@ window.countNRooksSolutions = function(n) {
     return found;
   };
 
-  initBoard();
-  //while (startRow < n && startCol < n) { 
-  while (count < 2) {
-    validStartPoint = false;
-    removeRowConflicts(startRow, startCol);
-    removeColConflicts(startRow, startCol);
-    done.push([startRow, startCol]);
-    scan(startRow, startCol);
-    console.log('COUNT: ' + count + '\n' + board.get(0) + '\n' + board.get(1) + '\n' + board.get(2) + '\n' + board.get(3));
-    count++;
+  var results = {};
+
+  for (var row = 0; row < n; row++) {
+    for (var col = 0; col < n; col++) {
+      startRow = 3;
+      startCol = 0;
+      done = [];
+      count = 0;
+      validStartPoint;
+      currentRow = 0;
+      initBoard();
+      //while (startRow < n && startCol < n) { 
+      while (count < n) {
+        validStartPoint = false;
+        removeRowConflicts(startRow, startCol);
+        removeColConflicts(startRow, startCol);
+        done.push([startRow, startCol]);
+        scan(startRow, startCol);
+        //console.log('COUNT: ' + count + '\n' + board.get(0) + '\n' + board.get(1) + '\n' + board.get(2) + '\n' + board.get(3));
+        count++;
+      }
+
+      var finishedBoard = [];
+
+      for (var i = 0; i < n; i++) {
+        finishedBoard.push(board.get(i));
+      }
+
+      results[JSON.stringify(finishedBoard)] = finishedBoard;
+    }
+  }
+
+  var keyCount = 0;
+  for (var key in results) {
+    keyCount++;
   }
 
   console.log('FINAL: ' + count + '\n' + board.get(0) + '\n' + board.get(1) + '\n' + board.get(2) + '\n' + board.get(3));
 
 
   //console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  //return solutionCount;
+  return keyCount;
 };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
