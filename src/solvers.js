@@ -26,83 +26,95 @@ window.findNRooksSolution = function(n) {
   //nested array for each row
   //each of which contains a 0 or 1 
  
-  var board = new Board({n: n});
+
   
   //if n is 1, return [1]
   //if n > 1
     //pick a position where 1st rook goes
     //check row for conflicts AND check column conflicts using 1st rook's position
     //if row conflict is true, make whole row 0
-
-  if (n === 1) {
-    return [1];    
-  } else {
-    var startRow = 0;
-    var startCol = 0;
-  }
-
+  var n = 4;
+  var board = new Board({n: n});
+  var startRow = 0;
+  var startCol = 0;
   var done = [];
-
+  var count = 0;
+  var count2 = 0;
+  var currentRow = 0;
   //This will populate the entire board
   for (var row = 0; row < n; row++) {
     for (var col = 0; col < n; col++) {
       board.togglePiece(row, col);
     }
   }
-
-  while (startRow < n && startCol < n) { 
-    removeRowConflicts(startRow, startCol);
-    removeColConflicts(startRow, startCol);
-    done.push([startRow, startCol]);
-    scan();
-  }
-
-
-
-  var scan = function(){
+  
+  var scan = function() {
+    debugger;
     for (var row = 0; row < n; row++) {
-      for(var col = 0; col < n; col++) {
-        if(board.get(row)[col] === 1 && done.indexOf([row,col]) === -1) {
+      currentRow = board.get(row);
+      for (var col = 0; col < n; col++) {
+        if (currentRow[col] === 1 && !search([row, col])) {
           startRow = row;
           startCol = col;
+          count2++;
           break;
         }
       }
+      if (count2 > 0) {
+        break;
+      }
     }
-  }; 
-
-
-
-
+  };
 
   //remove all row conflicts for the specified start row
   var removeRowConflicts = function(startRow, startCol) {
     for (var col = 0; col < n; col++) {
       if (col !== startCol) {
-        board.togglePiece(startRow, col);
+        //board.togglePiece(startRow, col);
+        board.get(startRow)[col] = 0;
       }
     }   
   };
+  
   //remove all column conflicts for the specified start col
   var removeColConflicts = function(startRow, startCol) {
     for (var row = 0; row < n; row++) {
       if (row !== startRow) {
-        board.togglePiece(row, startCol);
+        //board.togglePiece(row, startCol);
+        board.get(startRow)[col] = 0;
+
       }
     }   
   };
 
+  var search = function(arrayPos) {
+    var found = false;
+    //debugger;
+    // done = [[0,0] , ];
+    for (var i = 0; i < done.length; i++) {
+      if (arrayPos[0] === done[i][0] && arrayPos[1] === done[i][1]) {
+        found = true;
+      }
+    }
 
-  
+    return found;
+  };
+
+  //while (startRow < n && startCol < n) { 
+  while (count < 2) {
+    debugger;
+    removeRowConflicts(startRow, startCol);
+    removeColConflicts(startRow, startCol);
+    done.push([startRow, startCol]);
+    scan();
+    count++;
   }
 
+  console.log(board.get(0) + '\n' + board.get(1) + '\n' + board.get(2) + '\n' + board.get(3));
 
 
-
-
-
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
+  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  // return solution;
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
