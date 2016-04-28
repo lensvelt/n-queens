@@ -138,16 +138,13 @@
       }
       
       for (var row = startRow; row <= max - startRow; row++) {
-        console.log('row', row, 'col', colIndex);
         sum += this.get(row)[colIndex];
         colIndex++;
-        if(colIndex >= max){
+        if (colIndex >= max) { 
           break;
         }
       }
-
       return sum >= 2;
-
     },
 
     // test if any major diagonals on this board contain conflicts
@@ -163,32 +160,41 @@
       return hasConflict; // fixme
     },
 
-                //     _isInBounds: function(rowIndex, colIndex) {
-                //   return (
-                //     0 <= rowIndex && rowIndex < this.get('n') &&
-                //     0 <= colIndex && colIndex < this.get('n')
-                //   );
-                // },
-
-                // _getFirstRowColumnIndexForMajorDiagonalOn: function(rowIndex, colIndex) {
-                //   return colIndex - rowIndex;
-                // },
-
-                // _getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex) {
-                //   return colIndex + rowIndex;
-                // },
-
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      debugger;
+      var max = this.get('n');
+      var rowStart = 0;
+      var colIndex = minorDiagonalColumnIndexAtFirstRow;
+      var sum = 0;
+      while (!this._isInBounds(rowStart, colIndex)) {
+        rowStart++;
+        colIndex--;
+      }
+
+      for (var row = rowStart; row < max; row++) {
+        sum += this.get(row)[colIndex];
+        colIndex--;
+        if (colIndex < 0) {
+          break;
+        }
+      }
+      return sum >= 2; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var max = this.get('n');
+      var hasConflict = false;
+      for (var row = max - 1; row >= 0; row--) {
+        for (var col = max - 1; col >= 0; col--) {
+          hasConflict = hasConflict || this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(row, col));
+        } 
+      }
+      return hasConflict;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
