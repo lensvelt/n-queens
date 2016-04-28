@@ -153,7 +153,9 @@
       var hasConflict = false;
       for (var row = 0; row < max; row++) {
         for (var col = 0; col < max; col++) {
-          hasConflict = hasConflict || this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(row, col));
+          if (row === 0 || col === 0) {
+            hasConflict = hasConflict || this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(row, col));
+          }
         }
       }
 
@@ -165,7 +167,6 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      debugger;
       var max = this.get('n');
       var rowStart = 0;
       var colIndex = minorDiagonalColumnIndexAtFirstRow;
@@ -191,7 +192,9 @@
       var hasConflict = false;
       for (var row = max - 1; row >= 0; row--) {
         for (var col = max - 1; col >= 0; col--) {
-          hasConflict = hasConflict || this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(row, col));
+          if (row === max - 1 || col === 0) {
+            hasConflict = hasConflict || this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(row, col));
+          }
         } 
       }
       return hasConflict;
