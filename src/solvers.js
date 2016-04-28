@@ -75,13 +75,13 @@ window.findNRooksSolution = function(n) {
       }
     }   
   };
-  
+
   //remove all column conflicts for the specified start col
   var removeColConflicts = function(startRow, startCol) {
     for (var row = 0; row < n; row++) {
       if (row !== startRow) {
         //board.togglePiece(row, startCol);
-        board.get(startRow)[col] = 0;
+        board.get(row)[startCol] = 0;
 
       }
     }   
@@ -101,7 +101,7 @@ window.findNRooksSolution = function(n) {
   };
 
   //while (startRow < n && startCol < n) { 
-  while (count < 2) {
+  while (count < 4) {
     debugger;
     removeRowConflicts(startRow, startCol);
     removeColConflicts(startRow, startCol);
